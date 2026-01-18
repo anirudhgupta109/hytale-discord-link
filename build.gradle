@@ -1,0 +1,20 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+
+group = 'com.anirudhgupta109'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'net.dv8tion:JDA:5.0.0-beta.20'
+    implementation 'org.yaml:snakeyaml:2.2'
+    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+    compileOnly files('libs/HytaleServer.jar')
+}
+
+build.dependsOn shadowJar

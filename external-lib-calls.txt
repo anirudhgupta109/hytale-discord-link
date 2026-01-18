@@ -1,0 +1,47 @@
+This file outlines the external APIs and functions used in the Hytale Discord Link plugin.
+
+**JDA (Java Discord API)**
+- `net.dv8tion.jda.api.JDA`
+- `net.dv8tion.jda.api.JDABuilder`
+- `net.dv8tion.jda.api.entities.channel.middleman.MessageChannel`
+- `net.dv8tion.jda.api.entities.channel.ChannelType`
+- `net.dv8tion.jda.api.events.message.MessageReceivedEvent`
+- `net.dv8tion.jda.api.hooks.ListenerAdapter`
+- `net.dv8tion.jda.api.requests.GatewayIntent`
+
+**SnakeYAML**
+- `org.yaml.snakeyaml.Yaml`
+
+**json-simple**
+- `org.json.simple.JSONObject`
+- `org.json.simple.parser.JSONParser`
+- `org.json.simple.parser.ParseException`
+
+**Hytale Server API**
+- `com.hypixel.hytale.server.core.HytaleServer`
+- `com.hypixel.hytale.server.core.Message`
+- `com.hypixel.hytale.server.core.command.system.CommandContext`
+- `com.hypixel.hytale.server.core.command.system.basecommands.AbstractTargetPlayerCommand`
+- `com.hypixel.hytale.server.core.event.events.player.PlayerChatEvent`
+- `com.hypixel.hytale.server.core.event.events.player.PlayerConnectEvent`
+- `com.hypixel.hytale.server.core.plugin.JavaPlugin`
+- `com.hypixel.hytale.server.core.plugin.JavaPluginInit`
+- `com.hypixel.hytale.server.core.universe.PlayerRef`
+- `com.hypixel.hytale.server.core.universe.Universe`
+- `com.hypixel.hytale.server.core.universe.world.PlayerUtil`
+- `com.hypixel.hytale.server.core.universe.world.World`
+- `com.hypixel.hytale.component.Ref`
+- `com.hypixel.hytale.component.Store`
+- `com.hypixel.hytale.server.core.universe.world.storage.EntityStore`
+- `com.hypixel.hytale.server.core.event.EventRegistry`
+- `com.hypixel.hytale.server.core.command.system.CommandRegistry`
+- `java.util.concurrent.CompletableFuture`
+- `java.util.function.Function`
+- `java.util.logging.Level`
+- `java.io.File`
+- `java.io.IOException`
+- `java.io.InputStream`
+- `java.nio.file.Files`
+- `java.util.Map`
+- `java.util.HashMap`
+- `java.util.UUID`

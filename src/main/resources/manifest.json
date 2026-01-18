@@ -1,0 +1,15 @@
+{
+  "Group": "anirudhgupta109",
+  "Name": "HytaleDiscordLink",
+  "Version": "1.0-SNAPSHOT",
+  "Authors": [
+    {
+      "Name": "Anirudh Gupta",
+      "Email": "anirudhgupta109@gmail.com",
+      "Url": "https://www.github.com/anirudhgupta109"
+    }
+  ],
+  "Website": "https://www.github.com/anirudhgupta109",
+  "Main": "com.anirudhgupta109.hytalediscordlink.HytaleDiscordLinkPlugin",
+  "ServerVersion": "*"
+}
