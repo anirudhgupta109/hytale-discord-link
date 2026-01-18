@@ -1,23 +1,19 @@
 # Hytale Discord Link
 
-A module that brings a simple, lightweight, easy-to-use, and bloat-free bridge between Discord and Minecraft, heavily inspired and based on [EssentialsX Discord](https://github.com/EssentialsX/Essentials)
+A module that brings a simple, lightweight, easy-to-use, and bloat-free bridge between Discord and Hytale, heavily inspired and based on [EssentialsX Discord](https://github.com/EssentialsX/Essentials) which was made for Minecraft.
 
 Features you'd want from a Discord bridge such as:
 * Hytale Chat -> Discord Channel
 * Discord Channel -> Hytale Chat
-* Basic MC -> Discord Event Monitoring (Join/Leave/Death/Mute)
+* Basic Hytale -> Discord Event Monitoring (Join/Leave/Death/Mute)
 * & more...
 
 ---
 
 ## Table of Contents
 > * [Initial Setup](#initial-setup)
-> * [Console Relay](#console-relay)
-> * [Configuring Messages](#configuring-messages)
-> * [Receive Discord Messages in Minecraft](#receive-discord-messages-in-minecraft)
-> * [Discord Commands](#discord-commands)
-> * [Misc Permissions](#misc-permissions)
-> * [Developer API](#developer-api)
+> * [Configuring authentication](#configuring-authentication)
+> * [How to compile](#How-to-Compile?)
 
 ---
 
@@ -115,3 +111,12 @@ completed the initial, go back up to the [Table Of Contents](#table-of-contents)
 The plugin also allows a server owner an optional feature where only members of the discord channel can join and play on the server
 via the `auth-enabled` option in `config.yml`. This will further be expanded to require `strict-auth` as an optional extension
 requiring a link code every session join (useful for `offline` play).
+
+
+
+## How to Compile?
+Obtain the HytaleServer.jar file following the guide [HERE](https://support.hytale.com/hc/en-us/articles/45326769420827-Hytale-Server-Manual#server-setup) and place in libs/
+Run the build using:
+```./gradlew clean build shadowJar```
+The output JAR will be found in build/libs/hytale-discord-link-<`VERSION`>-all.jar
+PROFIT!
