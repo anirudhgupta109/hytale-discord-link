@@ -8,6 +8,10 @@ This file outlines the external APIs and functions used in the Hytale Discord Li
 - `net.dv8tion.jda.api.events.message.MessageReceivedEvent`
 - `net.dv8tion.jda.api.hooks.ListenerAdapter`
 - `net.dv8tion.jda.api.requests.GatewayIntent`
+- `net.dv8tion.jda.api.entities.User`
+- `net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent`
+- `net.dv8tion.jda.api.interactions.commands.OptionMapping`
+- `net.dv8tion.jda.api.interactions.commands.OptionType`
 
 **SnakeYAML**
 - `org.yaml.snakeyaml.Yaml`
@@ -20,8 +24,8 @@ This file outlines the external APIs and functions used in the Hytale Discord Li
 **Hytale Server API**
 - `com.hypixel.hytale.server.core.HytaleServer`
 - `com.hypixel.hytale.server.core.Message`
-- `com.hypixel.hytale.server.core.command.system.CommandContext`
-- `com.hypixel.hytale.server.core.command.system.basecommands.AbstractTargetPlayerCommand`
+- `com.hypixel.hytale.server.core.command.system.CommandContext` (Removed, not used)
+- `com.hypixel.hytale.server.core.command.system.basecommands.AbstractTargetPlayerCommand` (Removed, not used)
 - `com.hypixel.hytale.server.core.event.events.player.PlayerChatEvent`
 - `com.hypixel.hytale.server.core.event.events.player.PlayerConnectEvent`
 - `com.hypixel.hytale.server.core.plugin.JavaPlugin`
@@ -35,13 +39,22 @@ This file outlines the external APIs and functions used in the Hytale Discord Li
 - `com.hypixel.hytale.server.core.universe.world.storage.EntityStore`
 - `com.hypixel.hytale.server.core.event.EventRegistry`
 - `com.hypixel.hytale.server.core.command.system.CommandRegistry`
-- `java.util.concurrent.CompletableFuture`
-- `java.util.function.Function`
-- `java.util.logging.Level`
-- `java.io.File`
-- `java.io.IOException`
-- `java.io.InputStream`
-- `java.nio.file.Files`
-- `java.util.Map`
-- `java.util.HashMap`
-- `java.util.UUID`
+- `com.hypixel.hytale.server.core.modules.entity.damage.DeathSystems`
+- `com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent`
+- `com.hypixel.hytale.server.core.entity.entities.Player`
+- `com.hypixel.hytale.component.CommandBuffer`
+- `com.hypixel.hytale.component.query.Query`
+- `com.hypixel.hytale.server.core.command.system.CommandManager`
+- `com.hypixel.hytale.server.core.console.ConsoleSender`
+
+**New API Creations**
+- `com.anirudhgupta109.hytalediscordlink.apiv2.services.discord.InteractionCommand`
+- `com.anirudhgupta109.hytalediscordlink.apiv2.services.discord.InteractionCommandArgument`
+- `com.anirudhgupta109.hytalediscordlink.apiv2.services.discord.InteractionCommandArgumentImpl`
+- `com.anirudhgupta109.hytalediscordlink.apiv2.services.discord.InteractionCommandArgumentType`
+- `com.anirudhgupta109.hytalediscordlink.apiv2.services.discord.InteractionController`
+- `com.anirudhgupta109.hytalediscordlink.apiv2.services.discord.InteractionControllerImpl`
+- `com.anirudhgupta109.hytalediscordlink.apiv2.services.discord.InteractionEvent`
+- `com.anirudhgupta109.hytalediscordlink.apiv2.services.discord.InteractionEventImpl`
+- `com.anirudhgupta109.hytalediscordlink.apiv2.services.discord.InteractionMember`
+- `com.anirudhgupta109.hytalediscordlink.apiv2.services.discord.InteractionMemberImpl`
