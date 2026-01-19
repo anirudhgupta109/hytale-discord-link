@@ -109,14 +109,27 @@ completed the initial, go back up to the [Table Of Contents](#table-of-contents)
 
 ## Configuring authentication
 The plugin also allows a server owner an optional feature where only members of the discord channel can join and play on the server
-via the `auth-enabled` option in `config.yml`. This will further be expanded to have `strict-auth` as an optional extension
-requiring a link code every session join (useful for `offline` play or when you have players joining and leaving your Discord Server often).
+via the `auth-enabled` option in `config.yml`.
+
+This can be further expanded to have `strict-auth` as an option, requiring a link code every session join
+(useful for `offline` play or when you have players joining and leaving your Discord Server often).
 
 
 
 ## How to Compile?
-Obtain the HytaleServer.jar file following the guide [HERE](https://support.hytale.com/hc/en-us/articles/45326769420827-Hytale-Server-Manual#server-setup) and place in libs/
+Obtain the `HytaleServer.jar` file following the guide [HERE](https://support.hytale.com/hc/en-us/articles/45326769420827-Hytale-Server-Manual#server-setup) and place in libs/
+
 Run the build using:
+
 ```./gradlew clean build shadowJar```
+
 The output JAR will be found in build/libs/hytale-discord-link-<`VERSION`>-all.jar
 PROFIT!
+
+
+### WIP
+Discord role -> Hytale group sync
+
+Execution of console commands via discord
+
+List commands and webhook integration
