@@ -23,7 +23,7 @@ public class LinkCommand extends AbstractTargetPlayerCommand {
     @Override
     protected void execute(@Nonnull CommandContext context, Ref<EntityStore> sourceRef, @Nonnull Ref<EntityStore> ref, @Nonnull PlayerRef playerRef, @Nonnull World world, @Nonnull Store<EntityStore> store) {
         String code = accountManager.generateLinkCode(playerRef.getUuid());
-        playerRef.sendMessage(Message.raw("Your link code is: " + code));
-        playerRef.sendMessage(Message.raw("Please send this code to the Discord bot to link your account."));
+        playerRef.sendMessage(Message.raw("Your link code is: " + code).color("yellow"));
+        playerRef.sendMessage(Message.raw("Please send this code to the Discord bot to link your account.").color("yellow"));
     }
 }

@@ -43,7 +43,7 @@ public class DiscordChatListener extends ListenerAdapter {
                         accountManager.linkAccount(pendingPlayer.getPlayerRef().getUuid(), author.getId());
                         playerListener.removePendingPlayer(pendingPlayer.getPlayerRef().getUuid());
                         event.getChannel().sendMessage("Your Discord account has been linked to Hytale player " + pendingPlayer.getPlayerRef().getUsername() + "!").queue();
-                        pendingPlayer.getPlayerRef().sendMessage(Message.raw("<p color='green'>Your Discord account has been successfully linked!</p>"));
+                        pendingPlayer.getPlayerRef().sendMessage(Message.raw("Your Discord account has been successfully linked!").color("green"));
                         linked = true;
                         break;
                     }
@@ -53,8 +53,7 @@ public class DiscordChatListener extends ListenerAdapter {
                 }
             } else {
                 String text = "[Discord: " + event.getAuthor().getName() + "] " + event.getMessage().getContentDisplay();
-                String jsonMessage = "{\"text\": \"" + text + "\", \"color\": \"blue\"}";
-                gameBroadcaster.broadcastMessage(jsonMessage);
+                gameBroadcaster.broadcastMessage(Message.raw(text).color("purple"));
             }
         }
     }

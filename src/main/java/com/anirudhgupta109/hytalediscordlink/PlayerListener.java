@@ -15,6 +15,7 @@ import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandManager;
 import com.hypixel.hytale.server.core.console.ConsoleSender;
+import com.hypixel.hytale.server.core.io.PacketHandler;
 
 import javax.annotation.Nonnull;
 import java.security.SecureRandom;
@@ -64,12 +65,13 @@ public class PlayerListener extends DeathSystems.OnDeathSystem {
                 CommandManager.get().handleCommand(ConsoleSender.INSTANCE, "player effect apply " + playerRef.getUsername() + " freeze");
             }, 1, TimeUnit.SECONDS);
 
-            playerRef.sendMessage(Message.raw("<p color='green'>Please link your Discord account by sending <p color='yellow'>/link " + code + "</p> to the bot in the designated channel.</p>"));
+            playerRef.sendMessage(Message.raw("Please link your Discord account by sending /link " + code + " to the bot in the designated channel.").color("yellow"));
 
             scheduler.schedule(() -> {
                 PendingPlayer pp = pendingPlayers.remove(playerRef.getUuid());
                 if (pp != null) {
-                    pp.getPlayerRef().getPacketHandler().disconnect("<p color='red'>You failed to link your Discord account in time.</p>");
+                    pp.getPlayerRef().sendMessage(Message.raw("You failed to link your Discord account in time.").color("red"));
+                    pp.getPlayerRef().getPacketHandler().disconnect("You failed to link your Discord account in time.");
                 }
             }, 90, TimeUnit.SECONDS);
         }

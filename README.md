@@ -84,8 +84,8 @@ messages as well as mute/kicks. To see how to further configure message types, s
 > Right-click your 'primary' channel -> `Copy ID` -> Paste into Notepad for later step
 
 13. You've successfully copied all the necessary IDs needed for a basic setup. Next up is generating the
-default config for EssentialsX Discord, so you can start setting it up! Do this by putting the
-jar (you can download it [here](https://github.com/anirudhgupta109/hytale-discord-link) if you do not
+default config for the plugin, so you can start setting it up! Do this by putting the JAR (you can download
+it [here](https://github.com/anirudhgupta109/hytale-discord-link/releases/latest) if you do not
 already have one) in your mods folder, starting your server, and then stopping it as soon as it finishes
 starting up.
 
@@ -109,8 +109,8 @@ completed the initial, go back up to the [Table Of Contents](#table-of-contents)
 
 ## Configuring authentication
 The plugin also allows a server owner an optional feature where only members of the discord channel can join and play on the server
-via the `auth-enabled` option in `config.yml`. This will further be expanded to require `strict-auth` as an optional extension
-requiring a link code every session join (useful for `offline` play).
+via the `auth-enabled` option in `config.yml`. This will further be expanded to have `strict-auth` as an optional extension
+requiring a link code every session join (useful for `offline` play or when you have players joining and leaving your Discord Server often).
 
 
 
