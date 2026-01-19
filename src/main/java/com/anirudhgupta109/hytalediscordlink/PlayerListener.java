@@ -23,6 +23,7 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -33,6 +34,7 @@ public class PlayerListener extends DeathSystems.OnDeathSystem {
     private final AccountManager accountManager;
     private DiscordBot discordBot; // Changed to non-final
     private final Map<UUID, PendingPlayer> pendingPlayers = new HashMap<>();
+    private final Map<UUID, PlayerRef> onlinePlayers = new ConcurrentHashMap<>();
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     private static final SecureRandom random = new SecureRandom();
     private static final Base64.Encoder encoder = Base64.getUrlEncoder().withoutPadding();
@@ -54,33 +56,62 @@ public class PlayerListener extends DeathSystems.OnDeathSystem {
 
     public void onPlayerConnect(PlayerConnectEvent event) {
         PlayerRef playerRef = event.getPlayerRef();
+        UUID playerUUID = playerRef.getUuid();
+        onlinePlayers.put(playerUUID, playerRef);
         discordBot.sendMessage(":arrow_right: " + playerRef.getUsername() + " has joined!");
 
-        if (config.isAuthEnabled() && !accountManager.isLinked(playerRef.getUuid())) {
-            String code = generateCode();
-            pendingPlayers.put(playerRef.getUuid(), new PendingPlayer(playerRef, code, System.currentTimeMillis()));
+        if (config.isAuthEnabled()) {
+            boolean isLinked = accountManager.isLinked(playerUUID);
 
-            // Freeze player
-            scheduler.schedule(() -> {
-                CommandManager.get().handleCommand(ConsoleSender.INSTANCE, "player effect apply " + playerRef.getUsername() + " freeze");
-                CommandManager.get().handleCommand(ConsoleSender.INSTANCE, "player effect apply " + playerRef.getUsername() + " stun");
-            }, 1, TimeUnit.SECONDS);
+            if (isLinked && !config.isStrictAuth()) {
+                // Player is linked, strict-auth is disabled, automatically log them in
+                String discordId = accountManager.getDiscordId(playerUUID);
+                accountManager.addActiveSession(playerUUID, discordId);
+                playerRef.sendMessage(Message.raw("Welcome back, " + playerRef.getUsername() + "! Your account is automatically authenticated.").color("green"));
+                return; // Do not proceed with freezing or linking
+            }
 
-            playerRef.sendMessage(Message.raw("Please link your Discord account by sending /link " + code + " to the bot in the designated channel.").color("yellow"));
-
-            scheduler.schedule(() -> {
-                PendingPlayer pp = pendingPlayers.remove(playerRef.getUuid());
-                if (pp != null) {
-                    pp.getPlayerRef().sendMessage(Message.raw("You failed to link your Discord account in time.").color("red"));
-                    pp.getPlayerRef().getPacketHandler().disconnect("You failed to link your Discord account in time.");
-                }
-            }, 90, TimeUnit.SECONDS);
+            if (!isLinked || (isLinked && config.isStrictAuth())) {
+                initiateLinkingProcess(playerRef);
+            }
         }
     }
 
+    public void initiateLinkingProcess(PlayerRef playerRef) {
+        UUID playerUUID = playerRef.getUuid();
+        String code = generateCode();
+        pendingPlayers.put(playerUUID, new PendingPlayer(playerRef, code, System.currentTimeMillis()));
+
+        // Freeze player
+        scheduler.schedule(() -> {
+            CommandManager.get().handleCommand(ConsoleSender.INSTANCE, "player effect apply " + playerRef.getUsername() + " freeze");
+            CommandManager.get().handleCommand(ConsoleSender.INSTANCE, "player effect apply " + playerRef.getUsername() + " stun");
+        }, 1, TimeUnit.SECONDS);
+
+        playerRef.sendMessage(Message.raw("Please link your Discord account by sending /link " + code + " to the bot in the designated channel.").color("yellow"));
+        if (accountManager.isLinked(playerUUID) && config.isStrictAuth()) {
+            playerRef.sendMessage(Message.raw("You must re-authenticate with your previously linked Discord account.").color("red"));
+        }
+
+        scheduler.schedule(() -> {
+            PendingPlayer pp = pendingPlayers.remove(playerUUID);
+            if (pp != null) {
+                pp.getPlayerRef().sendMessage(Message.raw("You failed to link your Discord account in time.").color("red"));
+                pp.getPlayerRef().getPacketHandler().disconnect("You failed to link your Discord account in time.");
+            }
+        }, 90, TimeUnit.SECONDS);
+    }
+
     public void onPlayerDisconnect(PlayerDisconnectEvent event) {
-        pendingPlayers.remove(event.getPlayerRef().getUuid());
+        UUID playerUUID = event.getPlayerRef().getUuid();
+        onlinePlayers.remove(playerUUID);
+        pendingPlayers.remove(playerUUID);
         discordBot.sendMessage(":arrow_left: " + event.getPlayerRef().getUsername() + " has left!");
+
+        // Remove active session if strict-auth is enabled
+        if (config.isStrictAuth()) {
+            accountManager.removeActiveSession(playerUUID);
+        }
     }
 
     @Override
@@ -107,6 +138,10 @@ public class PlayerListener extends DeathSystems.OnDeathSystem {
             // Unfreeze player
             CommandManager.get().handleCommand(ConsoleSender.INSTANCE, "player effect clear " + pendingPlayer.getPlayerRef().getUsername());
         }
+    }
+
+    public PlayerRef getPlayer(UUID playerUUID) {
+        return onlinePlayers.get(playerUUID);
     }
 
     private String generateCode() {

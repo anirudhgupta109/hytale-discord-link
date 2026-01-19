@@ -36,19 +36,31 @@ public class DiscordChatListener extends ListenerAdapter {
 
             if (messageContent.startsWith("/link ")) {
                 String code = messageContent.substring(6).trim();
-                boolean linked = false;
+                boolean handled = false;
                 for (Map.Entry<UUID, PendingPlayer> entry : playerListener.getPendingPlayers().entrySet()) {
                     PendingPlayer pendingPlayer = entry.getValue();
                     if (pendingPlayer.getCode().equals(code)) {
-                        accountManager.linkAccount(pendingPlayer.getPlayerRef().getUuid(), author.getId());
-                        playerListener.removePendingPlayer(pendingPlayer.getPlayerRef().getUuid());
+                        UUID playerUUID = pendingPlayer.getPlayerRef().getUuid();
+                        String discordIdOfSender = author.getId();
+
+                        if (config.isStrictAuth() && accountManager.isLinked(playerUUID)) {
+                            String storedDiscordId = accountManager.getDiscordId(playerUUID);
+                            if (!discordIdOfSender.equals(storedDiscordId)) {
+                                event.getChannel().sendMessage("Strict authentication is enabled. You must link using your previously registered Discord account.").queue();
+                                handled = true;
+                                break;
+                            }
+                        }
+
+                        accountManager.linkAccount(playerUUID, discordIdOfSender);
+                        playerListener.removePendingPlayer(playerUUID);
                         event.getChannel().sendMessage("Your Discord account has been linked to Hytale player " + pendingPlayer.getPlayerRef().getUsername() + "!").queue();
                         pendingPlayer.getPlayerRef().sendMessage(Message.raw("Your Discord account has been successfully linked!").color("green"));
-                        linked = true;
+                        handled = true;
                         break;
                     }
                 }
-                if (!linked) {
+                if (!handled) {
                     event.getChannel().sendMessage("Invalid or expired link code.").queue();
                 }
             } else {
