@@ -2,6 +2,7 @@ package com.anirudhgupta109.hytalediscordlink;
 
 import com.anirudhgupta109.hytalediscordlink.apiv2.services.discord.InteractionControllerImpl;
 import com.anirudhgupta109.hytalediscordlink.commands.LinkCommand;
+import com.anirudhgupta109.hytalediscordlink.commands.UnlinkCommand;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
@@ -31,7 +32,8 @@ public class DiscordBot {
                     .addEventListeners(new DiscordChatListener(gameBroadcaster, accountManager, playerListener, config), interactionController)
                     .build();
             jda.awaitReady();
-            interactionController.registerCommand(new LinkCommand(accountManager, this));
+            interactionController.registerCommand(new LinkCommand(accountManager, this, config));
+            interactionController.registerCommand(new UnlinkCommand(accountManager, this, config));
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

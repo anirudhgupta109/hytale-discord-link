@@ -14,12 +14,14 @@ public class Config {
     private final String guildId;
     private final String channelId;
     private final boolean authEnabled;
+    private final boolean strictAuth;
 
-    public Config(String botToken, String guildId, String channelId, boolean authEnabled) {
+    public Config(String botToken, String guildId, String channelId, boolean authEnabled, boolean strictAuth) {
         this.botToken = botToken;
         this.guildId = guildId;
         this.channelId = channelId;
         this.authEnabled = authEnabled;
+        this.strictAuth = strictAuth;
     }
 
     public static Config load(File file) {
@@ -30,7 +32,8 @@ public class Config {
             String guildId = (String) data.get("guild-id");
             String channelId = (String) data.get("channel-id");
             boolean authEnabled = (boolean) data.get("auth-enabled");
-            return new Config(botToken, guildId, channelId, authEnabled);
+            boolean strictAuth = (boolean) data.getOrDefault("strict-auth", false);
+            return new Config(botToken, guildId, channelId, authEnabled, strictAuth);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -51,5 +54,9 @@ public class Config {
 
     public boolean isAuthEnabled() {
         return authEnabled;
+    }
+
+    public boolean isStrictAuth() {
+        return strictAuth;
     }
 }

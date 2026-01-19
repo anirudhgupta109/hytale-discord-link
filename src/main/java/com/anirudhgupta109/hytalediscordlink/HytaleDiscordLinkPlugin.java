@@ -84,7 +84,7 @@ public class HytaleDiscordLinkPlugin extends JavaPlugin {
         getEventRegistry().register(PlayerDisconnectEvent.class, playerListener::onPlayerDisconnect);
         getEntityStoreRegistry().registerSystem(playerListener);
 
-        getCommandRegistry().registerCommand(new LinkCommand(accountManager));
+
 
         getLogger().at(Level.INFO).log("Hytale Discord Link plugin enabled!");
     }

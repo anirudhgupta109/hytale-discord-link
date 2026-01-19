@@ -15,12 +15,16 @@ import java.util.UUID;
 public class AccountManager {
 
     private final File linkedAccountsFile;
+    private final File accountsFile;
     private final Map<UUID, String> linkedAccounts = new HashMap<>();
+    private final Map<UUID, String> accounts = new HashMap<>();
     private final Map<String, UUID> linkCodes = new HashMap<>();
 
     public AccountManager(File dataDirectory) {
         this.linkedAccountsFile = new File(dataDirectory, "linked-accounts.json");
+        this.accountsFile = new File(dataDirectory, "accounts.json");
         load();
+        loadAccounts();
     }
 
     public String generateLinkCode(UUID playerUUID) {
@@ -35,6 +39,7 @@ public class AccountManager {
 
     public void linkAccount(UUID playerUUID, String discordId) {
         linkedAccounts.put(playerUUID, discordId);
+        addActiveSession(playerUUID, discordId);
         save();
     }
 
@@ -44,6 +49,65 @@ public class AccountManager {
 
     public String getDiscordId(UUID playerUUID) {
         return linkedAccounts.get(playerUUID);
+    }
+
+    public void addActiveSession(UUID playerUUID, String discordId) {
+        accounts.put(playerUUID, discordId);
+        saveAccounts();
+    }
+
+    public void removeActiveSession(UUID playerUUID) {
+        accounts.remove(playerUUID);
+        saveAccounts();
+    }
+
+    public boolean isLoggedIn(UUID playerUUID) {
+        return accounts.containsKey(playerUUID);
+    }
+
+    public void removeFullAccount(UUID playerUUID) {
+        linkedAccounts.remove(playerUUID);
+        accounts.remove(playerUUID);
+        save();
+        saveAccounts();
+    }
+
+    public UUID getPlayerUUIDByDiscordId(String discordId) {
+        for (Map.Entry<UUID, String> entry : accounts.entrySet()) {
+            if (entry.getValue().equals(discordId)) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+
+    private void loadAccounts() {
+        if (!accountsFile.exists() || accountsFile.length() == 0) {
+            return;
+        }
+        JSONParser parser = new JSONParser();
+        try (FileReader reader = new FileReader(accountsFile)) {
+            JSONObject jsonObject = (JSONObject) parser.parse(reader);
+            for (Object key : jsonObject.keySet()) {
+                UUID playerUUID = UUID.fromString((String) key);
+                String discordId = (String) jsonObject.get(key);
+                accounts.put(playerUUID, discordId);
+            }
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveAccounts() {
+        JSONObject jsonObject = new JSONObject();
+        for (Map.Entry<UUID, String> entry : accounts.entrySet()) {
+            jsonObject.put(entry.getKey().toString(), entry.getValue());
+        }
+        try (FileWriter writer = new FileWriter(accountsFile)) {
+            writer.write(jsonObject.toJSONString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void load() {
