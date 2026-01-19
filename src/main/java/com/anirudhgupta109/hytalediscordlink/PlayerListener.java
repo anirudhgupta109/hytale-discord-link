@@ -63,6 +63,7 @@ public class PlayerListener extends DeathSystems.OnDeathSystem {
             // Freeze player
             scheduler.schedule(() -> {
                 CommandManager.get().handleCommand(ConsoleSender.INSTANCE, "player effect apply " + playerRef.getUsername() + " freeze");
+                CommandManager.get().handleCommand(ConsoleSender.INSTANCE, "player effect apply " + playerRef.getUsername() + " stun");
             }, 1, TimeUnit.SECONDS);
 
             playerRef.sendMessage(Message.raw("Please link your Discord account by sending /link " + code + " to the bot in the designated channel.").color("yellow"));
