@@ -12,16 +12,20 @@ public class Config {
 
     private final String botToken;
     private final String guildId;
-    private final String channelId;
+    private final Map<String, String> channels;
     private final boolean authEnabled;
     private final boolean strictAuth;
+    private final boolean roleSyncEnabled;
+    private final Map<String, String> discordRoleToHytaleGroupMap;
 
-    public Config(String botToken, String guildId, String channelId, boolean authEnabled, boolean strictAuth) {
+    public Config(String botToken, String guildId, Map<String, String> channels, boolean authEnabled, boolean strictAuth, boolean roleSyncEnabled, Map<String, String> discordRoleToHytaleGroupMap) {
         this.botToken = botToken;
         this.guildId = guildId;
-        this.channelId = channelId;
+        this.channels = channels;
         this.authEnabled = authEnabled;
         this.strictAuth = strictAuth;
+        this.roleSyncEnabled = roleSyncEnabled;
+        this.discordRoleToHytaleGroupMap = discordRoleToHytaleGroupMap;
     }
 
     public static Config load(File file) {
@@ -30,10 +34,12 @@ public class Config {
             Map<String, Object> data = yaml.load(in);
             String botToken = (String) data.get("bot-token");
             String guildId = (String) data.get("guild-id");
-            String channelId = (String) data.get("channel-id");
+            Map<String, String> channels = (Map<String, String>) data.get("channels");
             boolean authEnabled = (boolean) data.get("auth-enabled");
             boolean strictAuth = (boolean) data.getOrDefault("strict-auth", false);
-            return new Config(botToken, guildId, channelId, authEnabled, strictAuth);
+            boolean roleSyncEnabled = (boolean) data.getOrDefault("role-sync-enabled", false);
+            Map<String, String> discordRoleToHytaleGroupMap = (Map<String, String>) data.getOrDefault("discord-role-to-hytale-group-map", new HashMap<>());
+            return new Config(botToken, guildId, channels, authEnabled, strictAuth, roleSyncEnabled, discordRoleToHytaleGroupMap);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -48,8 +54,8 @@ public class Config {
         return guildId;
     }
 
-    public String getChannelId() {
-        return channelId;
+    public Map<String, String> getChannels() {
+        return channels;
     }
 
     public boolean isAuthEnabled() {
@@ -58,5 +64,13 @@ public class Config {
 
     public boolean isStrictAuth() {
         return strictAuth;
+    }
+
+    public boolean isRoleSyncEnabled() {
+        return roleSyncEnabled;
+    }
+
+    public Map<String, String> getDiscordRoleToHytaleGroupMap() {
+        return discordRoleToHytaleGroupMap;
     }
 }

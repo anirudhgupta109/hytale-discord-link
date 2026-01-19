@@ -54,7 +54,9 @@ public class HytaleDiscordLinkPlugin extends JavaPlugin {
         
         // Initialize playerListener temporarily without discordBot to break the circular dependency
         playerListener = new PlayerListener(config, accountManager, null); 
-        discordBot = new DiscordBot(config, gameBroadcaster, accountManager, playerListener);
+        discordBot = new DiscordBot(config, gameBroadcaster, accountManager, playerListener, PermissionsModule.get());
+        discordBot.setPlugin(this); // Set the plugin instance
+        accountManager.setDiscordBot(discordBot); // Set the discordBot in AccountManager
         // Now that discordBot is initialized, set it in playerListener
         playerListener.setDiscordBot(discordBot);
 
@@ -83,6 +85,7 @@ public class HytaleDiscordLinkPlugin extends JavaPlugin {
         getEventRegistry().register(PlayerConnectEvent.class, playerListener::onPlayerConnect);
         getEventRegistry().register(PlayerDisconnectEvent.class, playerListener::onPlayerDisconnect);
         getEntityStoreRegistry().registerSystem(playerListener);
+        getCommandRegistry().register(new SyncRolesCommand(accountManager, discordBot, config, PermissionsModule.get()));
 
 
 

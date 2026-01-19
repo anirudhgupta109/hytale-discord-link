@@ -16,15 +16,19 @@ public class AccountManager {
 
     private final File linkedAccountsFile;
     private final File accountsFile;
-    private final Map<UUID, String> linkedAccounts = new HashMap<>();
-    private final Map<UUID, String> accounts = new HashMap<>();
-    private final Map<String, UUID> linkCodes = new HashMap<>();
+    private final Map<UUID, String> linkCodes = new HashMap<>();
+    private DiscordBot discordBot; // Added DiscordBot dependency
 
     public AccountManager(File dataDirectory) {
         this.linkedAccountsFile = new File(dataDirectory, "linked-accounts.json");
         this.accountsFile = new File(dataDirectory, "accounts.json");
         load();
         loadAccounts();
+    }
+
+    // Setter for DiscordBot, to be called after DiscordBot is initialized
+    public void setDiscordBot(DiscordBot discordBot) {
+        this.discordBot = discordBot;
     }
 
     public String generateLinkCode(UUID playerUUID) {
@@ -41,6 +45,9 @@ public class AccountManager {
         linkedAccounts.put(playerUUID, discordId);
         addActiveSession(playerUUID, discordId);
         save();
+        if (discordBot != null && discordBot.getConfig().isRoleSyncEnabled()) {
+            discordBot.syncDiscordRolesToHytaleGroups(playerUUID, discordId);
+        }
     }
 
     public boolean isLinked(UUID playerUUID) {
@@ -66,6 +73,9 @@ public class AccountManager {
     }
 
     public void removeFullAccount(UUID playerUUID) {
+        if (discordBot != null && discordBot.getConfig().isRoleSyncEnabled()) {
+            discordBot.clearSyncedHytaleGroups(playerUUID);
+        }
         linkedAccounts.remove(playerUUID);
         accounts.remove(playerUUID);
         save();

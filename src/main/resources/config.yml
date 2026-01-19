@@ -1,5 +1,12 @@
 bot-token: "YOUR_BOT_TOKEN"
 guild-id: "YOUR_GUILD_ID"
-channel-id: "YOUR_CHANNEL_ID"
+channels:
+  primary: "YOUR_CHANNEL_ID"
+  staff: "YOUR_CHANNEL_ID"
 auth-enabled: false
 strict-auth: false
+role-sync-enabled: false
+discord-role-to-hytale-group-map:
+  # Example: "Discord Role ID": "Hytale Group Name"
+  # "123456789012345678": "admin"
+  # "987654321098765432": "moderator"

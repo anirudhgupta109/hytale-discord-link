@@ -67,6 +67,9 @@ public class PlayerListener extends DeathSystems.OnDeathSystem {
                 // Player is linked, strict-auth is disabled, automatically log them in
                 String discordId = accountManager.getDiscordId(playerUUID);
                 accountManager.addActiveSession(playerUUID, discordId);
+                if (discordBot != null && discordBot.getConfig().isRoleSyncEnabled()) {
+                    discordBot.syncDiscordRolesToHytaleGroups(playerUUID, discordId);
+                }
                 playerRef.sendMessage(Message.raw("Welcome back, " + playerRef.getUsername() + "! Your account is automatically authenticated.").color("green"));
                 return; // Do not proceed with freezing or linking
             }
